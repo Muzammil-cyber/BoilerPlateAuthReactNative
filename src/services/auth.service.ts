@@ -25,7 +25,11 @@ export class AuthService {
 
             return response;
         } catch (error) {
-            throw new Error('Login failed. Please check your credentials.');
+            if (error instanceof Error) {
+                throw new Error(error.message || 'Login failed. Please try again.');
+            }
+            // Fallback for non-Error responses
+            throw new Error('Login failed. Contact support if the issue persists.');
         }
     }
 
@@ -92,7 +96,11 @@ export class AuthService {
 
             return response;
         } catch (error) {
-            throw new Error('Registration failed. Please try again.');
+            if (error instanceof Error) {
+                throw new Error(error.message || 'Registration failed. Please try again.');
+            }
+            // Fallback for non-Error responses
+            throw new Error('Registration failed. Contact support if the issue persists.');
         }
     }
 }

@@ -72,7 +72,7 @@ import { API_URL, API_TIMEOUT } from '@env';
 export const api = new ApiService({
     baseURL: API_URL,
     headers: {
-        'timeout': API_TIMEOUT,
+        'timeout': API_TIMEOUT?.toString() || '5000', // Default to 5000ms if not set
     },
 });
 

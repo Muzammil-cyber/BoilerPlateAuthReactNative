@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 
 const initialState: AuthState = {
     isLoading: true,
-    isAuthenticated: false,
+    isAuthenticated: true,
     accessToken: null,
     user: null,
 };

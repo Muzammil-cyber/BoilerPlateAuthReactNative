@@ -26,7 +26,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         try {
             await login({ email, password });
         } catch (error) {
-            Alert.alert('Error', 'Invalid credentials');
+            if (error instanceof Error) {
+                Alert.alert('Error', error.message);
+            } else {
+                Alert.alert('Error', 'Login failed.\nContact support if the issue persists.');
+            }
         }
     };
 
