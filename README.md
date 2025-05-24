@@ -303,3 +303,137 @@ const isBiometricEnabled = config.features.biometric;
 ### Security Note
 
 Never commit your `.env` file. It is already added to `.gitignore`. Always use `.env.example` as a template.
+
+## State Management with Zustand
+
+This boilerplate uses Zustand for state management with the following features:
+
+- Persistent storage with MMKV encryption
+- Type-safe state management
+- Selective persistence
+- Centralized store architecture
+
+### Using the Auth Store
+
+```typescript
+import { useAuthStore } from '../stores/auth.store';
+
+// Access state
+const user = useAuthStore((state) => state.user);
+const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+// Use actions
+const login = useAuthStore((state) => state.login);
+await login({ email, password });
+
+// Using the convenience hook
+import { useAuthSelectors } from '../hooks/useAuthSelectors';
+
+const { user, isAuthenticated, login, logout } = useAuthSelectors();
+```
+
+### Secure Storage
+
+The auth store uses MMKV for encrypted storage:
+
+```typescript
+// Configuration in storage.service.ts
+export const mmkv = new MMKV({
+    id: 'auth-storage',
+    encryptionKey: 'your-secure-key' // Use environment variables in production
+});
+
+// Persist middleware configuration
+persist(
+    (set) => ({
+        // ... store implementation
+    }),
+    {
+        name: 'auth-storage',
+        storage: createJSONStorage(() => storage),
+        partialize: (state) => ({
+            // Only persist these fields
+            accessToken: state.accessToken,
+            user: state.user,
+        }),
+    }
+)
+```
+
+### Security Considerations
+
+1. The store uses MMKV's encryption for secure storage
+2. Only necessary data is persisted using `partialize`
+3. Sensitive data is never stored in plain AsyncStorage
+4. The store automatically handles token management
+5. State updates are atomic and predictable
+
+## Testing
+
+The boilerplate includes a comprehensive test suite using Jest and React Native Testing Library.
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Run tests in watch mode during development
+npm run test:watch
+
+# Run tests in CI environment
+npm run test:ci
+```
+
+### Test Coverage
+
+The project maintains high test coverage with thresholds set at 80% for:
+
+- Branches
+- Functions
+- Lines
+- Statements
+
+### Testing Structure
+
+1. Unit Tests for Services:
+   - API Service (`api.service.test.ts`)
+   - Auth Service (`auth.service.test.ts`)
+   - Storage Service (`storage.service.test.ts`)
+
+2. Store Tests:
+   - Auth Store (`auth.store.test.ts`)
+
+### Mocking
+
+The test setup includes mocks for:
+
+- react-native-keychain
+- react-native-mmkv
+- fetch API
+- Environment variables
+
+Example of testing a component with auth store:
+
+```typescript
+import { renderHook, act } from '@testing-library/react-hooks';
+import { useAuthStore } from '../stores/auth.store';
+
+describe('Auth Store', () => {
+  it('should handle login', async () => {
+    const { result } = renderHook(() => useAuthStore());
+    
+    await act(async () => {
+      await result.current.login({
+        email: 'test@example.com',
+        password: 'password'
+      });
+    });
+    
+    expect(result.current.isAuthenticated).toBe(true);
+  });
+});
+```

@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { useAuth } from '../../context/AuthContext';
+import { useAuthStore } from '../../stores/auth.store';
 
 const ProfileScreen = () => {
-    const { user } = useAuth();
+    const user = useAuthStore((state) => state.user);
 
     return (
         <View style={styles.container}>

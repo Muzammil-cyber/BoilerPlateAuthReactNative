@@ -4,17 +4,21 @@
  * @format
  */
 
-import React from 'react';
-import { AuthProvider } from './src/context/AuthContext';
+import React, { useEffect } from 'react';
 import { Navigation } from './src/navigation/Navigation';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useAuthStore } from './src/stores/auth.store';
 
 const App = () => {
+  const initialize = useAuthStore((state) => state.initialize);
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
+
   return (
     <SafeAreaProvider>
-      <AuthProvider>
-        <Navigation />
-      </AuthProvider>
+      <Navigation />
     </SafeAreaProvider>
   );
 };

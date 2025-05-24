@@ -9,7 +9,7 @@ import {
     KeyboardAvoidingView,
     Platform,
 } from 'react-native';
-import { useAuth } from '../../context/AuthContext';
+import { useAuthStore } from '../../stores/auth.store';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/Navigation';
 
@@ -21,7 +21,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { register } = useAuth();
+    const register = useAuthStore((state) => state.register);
 
     const handleRegister = async () => {
         try {
