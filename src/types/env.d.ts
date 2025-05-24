@@ -4,4 +4,5 @@ declare module '@env' {
     export const AUTH_STORAGE_KEY: string;
     export const USER_STORAGE_KEY: string;
     export const ENABLE_BIOMETRIC: string;
+    export const ENCRYPTION_KEY: string | undefined;
 }

@@ -1,10 +1,11 @@
+import { ENCRYPTION_KEY } from '@env';
 import { MMKV } from 'react-native-mmkv';
 import { StateStorage } from 'zustand/middleware';
 
 // Initialize MMKV with encryption
 export const mmkv = new MMKV({
     id: 'auth-storage',
-    encryptionKey: 'my-secure-key', // In production, use a secure way to generate and store this key
+    encryptionKey: ENCRYPTION_KEY || 'my-secure-key', // In production, use a secure way to generate and store this key
 });
 
 // Create a storage interface for Zustand
